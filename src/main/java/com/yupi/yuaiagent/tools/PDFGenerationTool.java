@@ -13,6 +13,11 @@ import org.springframework.ai.tool.annotation.Tool;
 import org.springframework.ai.tool.annotation.ToolParam;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.AtomicMoveNotSupportedException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 
 /**
  * PDF生成工具
@@ -24,31 +29,60 @@ public class PDFGenerationTool {
             @ToolParam(description = "Name of the file to save the generated PDF") String fileName,
             @ToolParam(description = "Content to be included in the PDF") String content) {
         String fileDir = FileConstant.FILE_SAVE_DIR + "/pdf";
-        String filePath = fileDir + "/" + fileName;
+        Path targetPath = Path.of(fileDir, fileName);
+        Path tempPath = null;
         try {
-            // 创建目录
             FileUtil.mkdir(fileDir);
-            // 创建 PdfWriter 和 PdfDocument 对象
-            try (PdfWriter writer = new PdfWriter(filePath);
+            tempPath = Files.createTempFile(Path.of(fileDir), "pdf-", ".tmp");
+
+            try (PdfWriter writer = new PdfWriter(tempPath.toString());
                  PdfDocument pdf = new PdfDocument(writer);
                  Document document = new Document(pdf)) {
-                // 自定义字体（需要人工下载字体文件到特定目录）
-//                String fontPath = Paths.get("src/main/resources/static/fonts/simsun.ttf")
-//                        .toAbsolutePath().toString();
-//                PdfFont font = PdfFontFactory.createFont(fontPath,
-//                        PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED);
                 // 使用内置中文字体
                 PdfFont font = PdfFontFactory.createFont("STSongStd-Light", "UniGB-UCS2-H");
                 document.setFont(font);
-                // 创建段落
-                Paragraph paragraph = new Paragraph(content);
-                // 添加段落并关闭文档
-                document.add(paragraph);
+                document.add(new Paragraph(content));
             }
-            return "PDF generated successfully to: " + filePath;
-        } catch (IOException e) {
+
+            if (!isCompletePdf(tempPath)) {
+                Files.deleteIfExists(tempPath);
+                return "Error generating PDF: incomplete PDF structure (missing %%EOF)";
+            }
+
+            moveToTarget(tempPath, targetPath);
+            tempPath = null;
+            return "PDF generated successfully to: " + targetPath;
+        } catch (Exception e) {
+            cleanupQuietly(tempPath);
             return "Error generating PDF: " + e.getMessage();
         }
     }
-}
 
+    private static void moveToTarget(Path tempPath, Path targetPath) throws IOException {
+        try {
+            Files.move(tempPath, targetPath, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
+        } catch (AtomicMoveNotSupportedException e) {
+            Files.move(tempPath, targetPath, StandardCopyOption.REPLACE_EXISTING);
+        }
+    }
+
+    private static boolean isCompletePdf(Path path) throws IOException {
+        byte[] bytes = Files.readAllBytes(path);
+        if (bytes.length < 8) {
+            return false;
+        }
+        String ascii = new String(bytes, StandardCharsets.ISO_8859_1);
+        return ascii.startsWith("%PDF-") && ascii.contains("%%EOF");
+    }
+
+    private static void cleanupQuietly(Path path) {
+        if (path == null) {
+            return;
+        }
+        try {
+            Files.deleteIfExists(path);
+        } catch (IOException ignored) {
+            // best-effort cleanup of partial files
+        }
+    }
+}
