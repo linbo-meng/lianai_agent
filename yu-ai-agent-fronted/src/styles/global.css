@@ -1,0 +1,70 @@
+:root {
+  --font-sans: 'Orbitron', 'Noto Sans SC', 'DM Sans', system-ui, sans-serif;
+  --font-body: 'Noto Sans SC', 'DM Sans', system-ui, sans-serif;
+  --color-bg: #0a0e17;
+  --color-bg-elevated: #121826;
+  --color-panel: #151c2c;
+  --color-ink: #e8eef8;
+  --color-muted: #8b95a8;
+  --color-border: rgba(0, 212, 255, 0.12);
+  --neon-cyan: #00d4ff;
+  --neon-blue: #3b82f6;
+  --love-accent: #ff4d6d;
+  --love-glow: rgba(255, 77, 109, 0.45);
+  --manus-accent: #3b82f6;
+  --manus-glow: rgba(59, 130, 246, 0.5);
+  --radius: 20px;
+  --shadow-neon: 0 0 24px rgba(0, 212, 255, 0.15);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+#app {
+  height: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--color-ink);
+  background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.5;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+textarea,
+input {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 212, 255, 0.25);
+  border-radius: 3px;
+}
