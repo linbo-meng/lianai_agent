@@ -1,6 +1,6 @@
 package com.yupi.yuaiagent.agent;
 
-import com.itextpdf.layout.tagging.TaggingHintKey;
+import com.yupi.yuaiagent.agent.model.AgentState;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
@@ -33,13 +33,15 @@ public abstract class ReActAgent extends BaseAgent{
             //先思考
             boolean shouldAct = think();
             if(!shouldAct){
+                //无需行动时结束循环，避免白跑到 maxSteps
+                setState(AgentState.FINISHED);
                 return "思考完成 无需行动";
             }
             //再行动
             return act();
         }
         catch (Exception e){
-            e.printStackTrace();
+            log.error("步骤执行失败", e);
             return "步骤执行失败" + e.getMessage();
         }
 

@@ -1,10 +1,6 @@
 package com.yupi.yuaiagent.agent;
 
 import com.yupi.yuaiagent.advisor.MyLoggerAdvisor;
-import com.yupi.yuaiagent.tools.ToolRegistration;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.tool.ToolCallback;
@@ -27,12 +23,13 @@ public class YuManus extends ToolCallAgent {
         this.setSystemPrompt(SYSTEM_PROMPT);
         String NEXT_STEP_PROMPT = """  
                 Based on user needs, proactively select the most appropriate tool or combination of tools.  
-                For complex tasks, you can break down the problem and use different tools step by step to solve it.  
-                After using each tool, clearly explain the execution results and suggest the next steps.  
-                If you want to stop the interaction at any point, use the `terminate` tool/function call.  
+                For complex tasks, break the problem down and use tools step by step, preferring fewer steps.  
+                After using each tool, briefly note the result and continue.  
+                As soon as the user's request is fully satisfied (e.g. PDF generated), call `doTerminate` immediately.  
+                Do not keep searching or scraping once you already have enough information.  
                 """;
         this.setNextStepPrompt(NEXT_STEP_PROMPT);
-        this.setMaxSteps(20);
+        this.setMaxSteps(10);
         //初始化 AI 对话客户端
         ChatClient chatClient = ChatClient.builder(dashScopeChatModel)
                 .defaultAdvisors(new MyLoggerAdvisor())

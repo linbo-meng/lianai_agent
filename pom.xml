@@ -135,12 +135,11 @@
             <version>9.1.0</version>
             <type>pom</type>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/com.itextpdf/font-asian -->
+        <!-- 中日韩字体（运行时需要，勿设为 test） -->
         <dependency>
             <groupId>com.itextpdf</groupId>
             <artifactId>font-asian</artifactId>
             <version>9.1.0</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>cn.hutool</groupId>

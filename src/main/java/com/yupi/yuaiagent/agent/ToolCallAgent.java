@@ -18,6 +18,7 @@ import org.springframework.ai.model.tool.ToolCallingManager;
 import org.springframework.ai.model.tool.ToolExecutionResult;
 import org.springframework.ai.tool.ToolCallback;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -59,13 +60,12 @@ public class ToolCallAgent extends ReActAgent{
      */
     @Override
     public boolean think(){
-        //1.校验提示词，拼接用户提示词
-        if(StrUtil.isNotBlank(getNextStepPrompt())){
-            UserMessage userMessage = new UserMessage(getNextStepPrompt());
-            getMessagesList().add(userMessage);
+        //1. nextStepPrompt 仅用于当次请求，不写入长期 messagesList，避免每步重复累积
+        List<Message> messagesList = new ArrayList<>(getMessagesList());
+        if (StrUtil.isNotBlank(getNextStepPrompt())) {
+            messagesList.add(new UserMessage(getNextStepPrompt()));
         }
         //2.调用 AI 大模型，获取工具的调用结果
-        List<Message> messagesList = getMessagesList();
         Prompt prompt = new Prompt(messagesList, this.chatOptions);
         try {
             ChatResponse chatResponse = getChatClient().prompt(prompt)

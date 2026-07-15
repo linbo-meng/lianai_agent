@@ -40,7 +40,7 @@ public class TerminalOperationTool {
                 Thread.currentThread().interrupt();
             }
         }
-        return output.toString();
+        return ToolResultTruncator.truncate(output.toString(), 3000);
     }
 
     /**

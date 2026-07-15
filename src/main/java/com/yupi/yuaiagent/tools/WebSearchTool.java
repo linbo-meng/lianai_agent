@@ -45,7 +45,7 @@ public class WebSearchTool {
                 JSONObject tmpJSONObject = (JSONObject) obj;
                 return tmpJSONObject.toString();
             }).collect(Collectors.joining(","));
-            return result;
+            return ToolResultTruncator.truncate(result, 3000);
         } catch (Exception e) {
             return "Error searching Baidu: " + e.getMessage();
         }
