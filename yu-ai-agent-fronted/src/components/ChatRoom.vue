@@ -287,8 +287,10 @@ async function handleSend() {
 .chat-room {
   display: flex;
   flex-direction: column;
+  width: 100%;
   height: 100%;
-  max-width: 880px;
+  height: 100dvh;
+  max-width: 960px;
   margin: 0 auto;
   background: var(--color-bg-elevated);
   border-left: 1px solid var(--color-border);
@@ -309,14 +311,20 @@ async function handleSend() {
 .chat-header {
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 16px 20px;
+  gap: clamp(10px, 2vw, 16px);
+  padding:
+    calc(12px + var(--safe-top))
+    calc(16px + var(--safe-right))
+    12px
+    calc(16px + var(--safe-left));
   border-bottom: 1px solid var(--color-border);
   background: linear-gradient(180deg, rgba(0, 212, 255, 0.06), transparent);
+  flex-shrink: 0;
 }
 
 .back-btn {
   flex-shrink: 0;
+  min-height: 40px;
   padding: 8px 14px;
   border-radius: 999px;
   color: var(--color-muted);
@@ -331,30 +339,45 @@ async function handleSend() {
   box-shadow: 0 0 12px rgba(0, 212, 255, 0.2);
 }
 
+.header-info {
+  min-width: 0;
+  flex: 1;
+}
+
 .header-info h1 {
   font-family: var(--font-sans);
-  font-size: 1.05rem;
+  font-size: clamp(0.92rem, 2.4vw, 1.1rem);
   font-weight: 600;
   letter-spacing: 0.04em;
   color: var(--neon-cyan);
   text-shadow: 0 0 12px rgba(0, 212, 255, 0.35);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .chat-id {
   margin-top: 2px;
-  font-size: 0.72rem;
+  font-size: clamp(0.65rem, 1.8vw, 0.72rem);
   color: var(--color-muted);
   word-break: break-all;
   font-family: ui-monospace, monospace;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .message-list {
   flex: 1;
   overflow-y: auto;
-  padding: 24px 20px;
+  overflow-x: hidden;
+  padding: clamp(14px, 2.5vw, 24px) clamp(12px, 2.5vw, 20px);
   background:
     radial-gradient(ellipse at top, rgba(0, 212, 255, 0.05), transparent 45%),
     linear-gradient(180deg, #0d1320, #0a0e17);
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
 }
 
 .empty-tip {
@@ -364,9 +387,11 @@ async function handleSend() {
   justify-content: center;
   gap: 16px;
   height: 100%;
-  min-height: 220px;
+  min-height: 180px;
+  padding: 0 12px;
   color: var(--color-muted);
-  font-size: 0.95rem;
+  font-size: clamp(0.88rem, 2.2vw, 0.95rem);
+  text-align: center;
 }
 
 .empty-ring {
@@ -381,8 +406,8 @@ async function handleSend() {
 .message-row {
   display: flex;
   align-items: flex-start;
-  gap: 10px;
-  margin-bottom: 18px;
+  gap: clamp(8px, 1.5vw, 10px);
+  margin-bottom: clamp(14px, 2vw, 18px);
   animation: fadeSlide 0.28s ease;
 }
 
@@ -392,8 +417,8 @@ async function handleSend() {
 
 .avatar {
   flex-shrink: 0;
-  width: 36px;
-  height: 36px;
+  width: clamp(32px, 8vw, 36px);
+  height: clamp(32px, 8vw, 36px);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -413,8 +438,9 @@ async function handleSend() {
 }
 
 .bubble {
-  max-width: min(72%, 520px);
-  padding: 12px 16px;
+  max-width: min(78%, 560px);
+  min-width: 0;
+  padding: clamp(10px, 2vw, 12px) clamp(12px, 2.2vw, 16px);
   border-radius: 14px;
   background: var(--color-panel);
   border: 1px solid var(--color-border);
@@ -434,8 +460,9 @@ async function handleSend() {
 .bubble-text {
   white-space: pre-wrap;
   word-break: break-word;
+  overflow-wrap: anywhere;
   font-family: inherit;
-  font-size: 0.95rem;
+  font-size: clamp(0.88rem, 2.2vw, 0.95rem);
   line-height: 1.55;
   color: var(--color-ink);
 }
@@ -479,15 +506,18 @@ async function handleSend() {
   font-family: ui-monospace, Consolas, monospace;
   background: rgba(0, 212, 255, 0.12);
   color: var(--neon-cyan);
+  word-break: break-all;
 }
 
 .md-body :deep(pre) {
   margin: 0.5em 0;
   padding: 10px 12px;
   overflow-x: auto;
+  max-width: 100%;
   border-radius: 8px;
   background: rgba(0, 0, 0, 0.35);
   border: 1px solid var(--color-border);
+  -webkit-overflow-scrolling: touch;
 }
 
 .md-body :deep(pre code) {
@@ -520,6 +550,7 @@ async function handleSend() {
   align-items: center;
   gap: 10px;
   width: 100%;
+  min-height: 48px;
   padding: 10px 12px;
   border-radius: 12px;
   border: 1px solid rgba(0, 212, 255, 0.28);
@@ -543,6 +574,7 @@ async function handleSend() {
 .file-icon {
   font-size: 1.25rem;
   line-height: 1;
+  flex-shrink: 0;
 }
 
 .file-meta {
@@ -553,7 +585,7 @@ async function handleSend() {
 }
 
 .file-name {
-  font-size: 0.9rem;
+  font-size: clamp(0.82rem, 2vw, 0.9rem);
   font-weight: 600;
   color: #e8eef8;
   word-break: break-all;
@@ -581,24 +613,32 @@ async function handleSend() {
 
 .input-area {
   display: flex;
-  gap: 12px;
+  gap: clamp(8px, 2vw, 12px);
   align-items: flex-end;
-  padding: 16px 20px 20px;
+  flex-shrink: 0;
+  padding:
+    12px
+    calc(12px + var(--safe-right))
+    calc(12px + var(--safe-bottom))
+    calc(12px + var(--safe-left));
   border-top: 1px solid var(--color-border);
-  background: rgba(10, 14, 23, 0.9);
+  background: rgba(10, 14, 23, 0.95);
+  backdrop-filter: blur(8px);
 }
 
 .input-area textarea {
   flex: 1;
   resize: none;
+  min-width: 0;
   min-height: 48px;
-  max-height: 120px;
-  padding: 12px 16px;
+  max-height: min(140px, 28vh);
+  padding: 12px 14px;
   border: 1px solid var(--color-border);
   border-radius: 14px;
   outline: none;
   color: var(--color-ink);
   background: var(--color-panel);
+  font-size: 16px; /* 防止 iOS 自动放大 */
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 
@@ -617,8 +657,9 @@ async function handleSend() {
 
 .send-btn {
   flex-shrink: 0;
+  min-width: 72px;
   height: 48px;
-  padding: 0 22px;
+  padding: 0 clamp(14px, 3vw, 22px);
   border-radius: 999px;
   color: #fff;
   font-weight: 600;
@@ -661,18 +702,106 @@ async function handleSend() {
   }
 }
 
+/* 大屏桌面：聊天室更宽 */
+@media (min-width: 1200px) {
+  .chat-room {
+    max-width: 1040px;
+  }
+
+  .bubble {
+    max-width: min(72%, 620px);
+  }
+}
+
+/* 平板 */
+@media (max-width: 1024px) and (min-width: 641px) {
+  .chat-room {
+    max-width: 860px;
+  }
+
+  .bubble {
+    max-width: min(80%, 520px);
+  }
+}
+
+/* 手机 */
 @media (max-width: 640px) {
   .chat-room {
     max-width: 100%;
     border: none;
+    box-shadow: none;
+  }
+
+  .chat-header {
+    gap: 10px;
+    padding-top: calc(10px + var(--safe-top));
+  }
+
+  .back-btn {
+    padding: 8px 12px;
+    font-size: 0.9rem;
   }
 
   .bubble {
-    max-width: 82%;
+    max-width: calc(100% - 44px);
+  }
+
+  .message-row {
+    gap: 8px;
+  }
+
+  .input-area {
+    gap: 8px;
+  }
+
+  .send-btn {
+    min-width: 64px;
+    padding: 0 14px;
+  }
+}
+
+/* 超小屏：发送按钮保持可用宽度 */
+@media (max-width: 380px) {
+  .send-btn {
+    min-width: 56px;
+    font-size: 0.9rem;
   }
 
   .header-info h1 {
-    font-size: 0.95rem;
+    letter-spacing: 0;
+  }
+}
+
+/* 横屏矮屏 */
+@media (max-height: 500px) and (orientation: landscape) {
+  .chat-header {
+    padding-top: calc(6px + var(--safe-top));
+    padding-bottom: 6px;
+  }
+
+  .message-list {
+    padding: 10px 14px;
+  }
+
+  .input-area {
+    padding-bottom: calc(8px + var(--safe-bottom));
+  }
+
+  .input-area textarea {
+    min-height: 40px;
+    max-height: 80px;
+  }
+
+  .send-btn {
+    height: 40px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .empty-ring,
+  .cursor,
+  .message-row {
+    animation: none;
   }
 }
 </style>

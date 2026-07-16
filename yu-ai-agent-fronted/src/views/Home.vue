@@ -51,11 +51,17 @@
 .home {
   position: relative;
   min-height: 100%;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 48px 24px 64px;
+  width: 100%;
+  padding:
+    calc(48px + var(--safe-top))
+    calc(var(--page-pad-x) + var(--safe-right))
+    calc(64px + var(--safe-bottom))
+    calc(var(--page-pad-x) + var(--safe-left));
   overflow: hidden;
 }
 
@@ -85,19 +91,20 @@
   filter: blur(80px);
   opacity: 0.35;
   animation: float 8s ease-in-out infinite;
+  pointer-events: none;
 }
 
 .orb-left {
-  width: 280px;
-  height: 280px;
+  width: clamp(160px, 28vw, 280px);
+  height: clamp(160px, 28vw, 280px);
   left: -60px;
   top: 20%;
   background: #ff4d6d;
 }
 
 .orb-right {
-  width: 320px;
-  height: 320px;
+  width: clamp(180px, 32vw, 320px);
+  height: clamp(180px, 32vw, 320px);
   right: -80px;
   bottom: 10%;
   background: #00d4ff;
@@ -108,20 +115,23 @@
 .apps {
   position: relative;
   z-index: 1;
+  width: 100%;
 }
 
 .hero {
   text-align: center;
-  margin-bottom: 56px;
+  margin-bottom: clamp(32px, 5vw, 56px);
+  padding: 0 8px;
   animation: heroIn 0.8s ease both;
 }
 
 .brand {
   font-family: var(--font-sans);
-  font-size: clamp(2rem, 6vw, 3.4rem);
+  font-size: clamp(1.6rem, 5.5vw, 3.4rem);
   font-weight: 700;
   letter-spacing: 0.06em;
   color: var(--neon-cyan);
+  word-break: break-word;
   text-shadow:
     0 0 12px rgba(0, 212, 255, 0.8),
     0 0 40px rgba(0, 212, 255, 0.45),
@@ -130,28 +140,31 @@
 }
 
 .subtitle {
-  margin-top: 18px;
-  font-size: 0.95rem;
+  margin-top: clamp(12px, 2vw, 18px);
+  font-size: clamp(0.8rem, 2vw, 0.95rem);
   letter-spacing: 0.28em;
   color: var(--color-muted);
 }
 
 .apps {
-  display: flex;
-  gap: 28px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(16px, 3vw, 28px);
   justify-content: center;
-  flex-wrap: wrap;
-  max-width: 900px;
+  max-width: 920px;
+  margin: 0 auto;
   animation: appsIn 0.85s 0.1s ease both;
 }
 
 .app-card {
-  width: 300px;
+  width: 100%;
+  max-width: 420px;
+  justify-self: center;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: 36px 28px 32px;
+  padding: clamp(24px, 3.5vw, 36px) clamp(18px, 3vw, 28px) clamp(22px, 3vw, 32px);
   border-radius: var(--radius);
   border: 1px solid var(--color-border);
   background: linear-gradient(165deg, rgba(21, 28, 44, 0.95), rgba(12, 18, 32, 0.9));
@@ -162,34 +175,42 @@
   transition: transform 0.3s ease, border-color 0.3s, box-shadow 0.3s;
 }
 
-.app-card:hover {
-  transform: translateY(-6px);
-}
+@media (hover: hover) and (pointer: fine) {
+  .app-card:hover {
+    transform: translateY(-6px);
+  }
 
-.app-card.love:hover {
-  border-color: rgba(255, 77, 109, 0.45);
-  box-shadow:
-    0 0 0 1px rgba(255, 77, 109, 0.1) inset,
-    0 20px 50px rgba(0, 0, 0, 0.4),
-    0 0 32px rgba(255, 77, 109, 0.2);
-}
+  .app-card.love:hover {
+    border-color: rgba(255, 77, 109, 0.45);
+    box-shadow:
+      0 0 0 1px rgba(255, 77, 109, 0.1) inset,
+      0 20px 50px rgba(0, 0, 0, 0.4),
+      0 0 32px rgba(255, 77, 109, 0.2);
+  }
 
-.app-card.manus:hover {
-  border-color: rgba(59, 130, 246, 0.5);
-  box-shadow:
-    0 0 0 1px rgba(59, 130, 246, 0.1) inset,
-    0 20px 50px rgba(0, 0, 0, 0.4),
-    0 0 32px rgba(59, 130, 246, 0.25);
+  .app-card.manus:hover {
+    border-color: rgba(59, 130, 246, 0.5);
+    box-shadow:
+      0 0 0 1px rgba(59, 130, 246, 0.1) inset,
+      0 20px 50px rgba(0, 0, 0, 0.4),
+      0 0 32px rgba(59, 130, 246, 0.25);
+  }
+
+  .app-card:hover .cta {
+    transform: scale(1.04);
+    box-shadow: 0 0 28px rgba(59, 130, 246, 0.65);
+    filter: brightness(1.08);
+  }
 }
 
 .icon-wrap {
   position: relative;
-  width: 88px;
-  height: 88px;
+  width: clamp(72px, 12vw, 88px);
+  height: clamp(72px, 12vw, 88px);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 22px;
+  margin-bottom: clamp(16px, 2.5vw, 22px);
 }
 
 .icon-glow {
@@ -227,8 +248,8 @@
 .icon {
   position: relative;
   z-index: 1;
-  width: 40px;
-  height: 40px;
+  width: clamp(32px, 5vw, 40px);
+  height: clamp(32px, 5vw, 40px);
 }
 
 .app-card.love .icon {
@@ -246,7 +267,7 @@
 }
 
 .app-card h2 {
-  font-size: 1.35rem;
+  font-size: clamp(1.1rem, 2.4vw, 1.35rem);
   font-weight: 700;
   color: #fff;
   letter-spacing: 0.02em;
@@ -254,8 +275,8 @@
 
 .app-card p {
   margin-top: 12px;
-  margin-bottom: 28px;
-  font-size: 0.9rem;
+  margin-bottom: clamp(18px, 3vw, 28px);
+  font-size: clamp(0.84rem, 1.8vw, 0.9rem);
   color: var(--color-muted);
   line-height: 1.6;
 }
@@ -264,7 +285,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 150px;
+  min-width: min(150px, 100%);
+  min-height: 44px;
   padding: 10px 24px;
   border-radius: 999px;
   font-size: 0.9rem;
@@ -273,12 +295,6 @@
   background: linear-gradient(135deg, #2563eb, #3b82f6);
   box-shadow: 0 0 18px rgba(59, 130, 246, 0.45);
   transition: transform 0.2s, box-shadow 0.2s, filter 0.2s;
-}
-
-.app-card:hover .cta {
-  transform: scale(1.04);
-  box-shadow: 0 0 28px rgba(59, 130, 246, 0.65);
-  filter: brightness(1.08);
 }
 
 @keyframes neonPulse {
@@ -329,28 +345,129 @@
   }
 }
 
-@media (max-width: 720px) {
+/* 大屏桌面 */
+@media (min-width: 1200px) {
+  .apps {
+    max-width: 980px;
+    gap: 36px;
+  }
+
+  .app-card {
+    max-width: 460px;
+  }
+}
+
+/* 平板竖屏 / 小笔记本 */
+@media (max-width: 1024px) {
   .home {
-    padding: 40px 16px 48px;
+    padding-top: calc(40px + var(--safe-top));
+  }
+
+  .apps {
+    max-width: 720px;
+    gap: 20px;
+  }
+}
+
+/* 平板横屏偏窄 / 大手机横屏：可并排但卡片更紧凑 */
+@media (max-width: 900px) and (min-width: 641px) {
+  .app-card {
+    padding: 28px 20px 24px;
+  }
+
+  .subtitle {
+    letter-spacing: 0.18em;
+  }
+}
+
+/* 手机：单列卡片 */
+@media (max-width: 640px) {
+  .home {
     justify-content: flex-start;
-    padding-top: 64px;
+    padding-top: calc(56px + var(--safe-top));
+    padding-bottom: calc(40px + var(--safe-bottom));
   }
 
   .hero {
-    margin-bottom: 40px;
+    margin-bottom: 28px;
   }
 
   .brand {
     letter-spacing: 0.02em;
+    line-height: 1.25;
   }
 
   .subtitle {
-    letter-spacing: 0.12em;
+    letter-spacing: 0.1em;
+    padding: 0 4px;
+  }
+
+  .apps {
+    grid-template-columns: 1fr;
+    max-width: 400px;
+    gap: 16px;
   }
 
   .app-card {
+    max-width: 100%;
+  }
+
+  .orb-left,
+  .orb-right {
+    opacity: 0.22;
+  }
+
+  .grid-lines {
+    background-size: 36px 36px;
+  }
+}
+
+/* 超小屏 */
+@media (max-width: 380px) {
+  .brand {
+    font-size: 1.45rem;
+  }
+
+  .cta {
     width: 100%;
-    max-width: 340px;
+  }
+}
+
+/* 横屏矮屏手机：避免垂直空间浪费过大 */
+@media (max-height: 500px) and (orientation: landscape) {
+  .home {
+    justify-content: flex-start;
+    padding-top: calc(24px + var(--safe-top));
+    padding-bottom: calc(24px + var(--safe-bottom));
+    overflow-y: auto;
+  }
+
+  .hero {
+    margin-bottom: 20px;
+  }
+
+  .apps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-width: 640px;
+  }
+
+  .icon-wrap {
+    width: 56px;
+    height: 56px;
+    margin-bottom: 10px;
+  }
+
+  .app-card p {
+    margin-bottom: 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand,
+  .orb,
+  .hero,
+  .apps {
+    animation: none;
   }
 }
 </style>
